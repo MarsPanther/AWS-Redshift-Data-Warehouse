@@ -8,9 +8,11 @@ In this project, we will create an ETL pipeline to build a data warehouses hoste
 
 ## Datasets
 
-Datasets used in this project are provided in two public S3 buckets. One bucket contains info about songs and artists, the second bucket has info concerning actions done by users (which song are listening, etc.. ). The objects contained in both buckets are JSON files.
+Datasets used in this project are provided in two public S3 buckets by Udacity. 
 
-The Redshift service is where data will be ingested and transformed, in fact though COPY command we will access to the JSON files inside the buckets and copy their content on our staging tables.
+- Song data: s3://udacity-dend/song_data
+- Log data: s3://udacity-dend/log_data
+
 
 ## Schema for Song Play Analysis
 
@@ -43,13 +45,13 @@ Setup the dwh.cfg file (File excluded by .gitignore). File format for **dwh.cfg*
 ```
 [CLUSTER]
 HOST=''
-DB_NAME=''
-DB_USER=''
-DB_PASSWORD=''
+DB_NAME='dev'
+DB_USER='awsuser'
+DB_PASSWORD='Passw0rd'
 DB_PORT=5439
 
 [IAM_ROLE]
-ARN=<IAM Role arn>
+ARN='IAM Role arn'
 
 [S3]
 LOG_DATA='s3://udacity-dend/log_data'
