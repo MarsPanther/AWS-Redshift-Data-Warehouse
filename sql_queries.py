@@ -66,8 +66,10 @@ CREATE TABLE IF NOT EXISTS songplays(
     session_id INTEGER,
     location VARCHAR,
     user_agent VARCHAR
-);
-SORTKEY ( start_time );
+)
+DISTSTYLE KEY
+DISTKEY (start_time)
+SORTKEY (start_time);
 """)
 
 user_table_create = ("""
@@ -113,6 +115,8 @@ CREATE TABLE IF NOT EXISTS time(
     year INTEGER encode bytedict ,
     weekday VARCHAR(9) encode bytedict
 )
+DISTSTYLE KEY
+DISTKEY (start_time)
 SORTKEY (start_time);
 """)
 
@@ -138,7 +142,7 @@ FORMAT AS json 'auto';
 songplay_table_insert = ("""
 INSERT INTO songplays (START_TIME, USER_ID, LEVEL, SONG_ID, ARTIST_ID, SESSION_ID, LOCATION, USER_AGENT)
 SELECT DISTINCT
-       TIMESTAMP 'epoch' + (se.ts / 1000) * INTERVAL '1 second' as start_time,
+       TIMESTAMP 'epoch' + se.ts / 1000 * INTERVAL '1 second' as start_time,
                 se.userId,
                 se.level,
                 ss.song_id,
@@ -178,7 +182,7 @@ FROM staging_songs;
 time_table_insert = ("""
 INSERT INTO time
 SELECT DISTINCT
-       TIMESTAMP 'epoch' + (ts/1000) * INTERVAL '1 second' as start_time,
+       TIMESTAMP 'epoch' + ts/1000 * INTERVAL '1 second' as start_time,
        EXTRACT(HOUR FROM start_time) AS hour,
        EXTRACT(DAY FROM start_time) AS day,
        EXTRACT(WEEKS FROM start_time) AS week,
